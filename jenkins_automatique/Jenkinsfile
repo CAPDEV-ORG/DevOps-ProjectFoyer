@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+
+    tools {
+        jdk 'JAVA_HOME'
+        maven 'M2_HOME'
+    }
+
+    stages {
+        stage('Hello') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+        
+        stage('Git') {
+            steps {
+                git branch: 'idriss_ben_younes', changelog: false, poll: false, url: 'https://github.com/CAPDEV-ORG/DevOps-ProjectFoyer.git'
+            }
+        }
+
+        stage('Testing mvn') {
+            steps {
+                sh 'mvn -version'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean install'
+            }
+        }
+
+        stage('Display Date') {
+            steps {
+                script {
+                    def currentDate = new Date()
+                    echo "Date actuelle : ${currentDate}"
+                }
+            }
+        }
+    }
+}
