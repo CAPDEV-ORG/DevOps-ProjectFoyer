@@ -2,8 +2,9 @@ pipeline {
     agent any
 
     tools {
-        jdk 'JAVA_HOME'
-        maven 'M2_HOME'
+        // Make sure 'JAVA_HOME' and 'M2_HOME' refer to actual tool names installed in Jenkins
+        jdk 'JAVA_HOME'  // Replace with the actual JDK tool name from Jenkins
+        maven 'M2_HOME'  // Replace with the actual Maven tool name from Jenkins
     }
 
     stages {
@@ -15,18 +16,21 @@ pipeline {
 
         stage('Git') {
             steps {
+                // Make sure the branch exists, and the URL is correct
                 git branch: 'Sayed-Ben-Slimene', changelog: false, poll: false, url: 'https://github.com/CAPDEV-ORG/DevOps-ProjectFoyer.git'
             }
         }
 
         stage('Testing mvn') {
             steps {
-                sh 'mvn -version'
+                // This will display the installed Maven version
+                sh 'mvn --version'
             }
         }
 
         stage('Build') {
             steps {
+                // Clean and install Maven dependencies
                 sh 'mvn clean install'
             }
         }
@@ -34,9 +38,11 @@ pipeline {
         stage('Display Date') {
             steps {
                 script {
+                    // Display the current date and time in the Jenkins log
                     def currentDate = new Date()
-                    echo "Date actuelle : ${currentDate}"
+                    echo "Current Date: ${currentDate}"
                 }
             }
         }
     }
+}
