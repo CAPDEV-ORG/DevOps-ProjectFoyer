@@ -3,7 +3,7 @@ pipeline {
 
     tools {
         // Make sure 'JAVA_HOME' and 'M2_HOME' refer to actual tool names installed in Jenkins
-        jdk 'JAVA_HOME'  // Replace with the actual JDK tool name from Jenkins
+        jdk 'JAVA_HOME'  // Replace with the actcccual JDK tool name from Jenkins
         maven 'M2_HOME'  // Replace with the actual Maven tool name from Jenkins
     }
 
