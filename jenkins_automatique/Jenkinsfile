@@ -40,23 +40,4 @@ pipeline {
             }
         }
     }
-        post {
-            success {
-                emailext (
-                    subject: "SUCCESS: Build ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                    body: """<p>Le build <b>${env.JOB_NAME}</b> numéro <b>${env.BUILD_NUMBER}</b> a réussi.</p>
-                             <p>Consultez les détails <a href="${env.BUILD_URL}">ici</a>.</p>""",
-                    to: 'idross.benyounes208@gmail.com'
-                )
-            }
-
-            failure {
-                emailext (
-                    subject: "FAILURE: Build ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                    body: """<p>Le build <b>${env.JOB_NAME}</b> numéro <b>${env.BUILD_NUMBER}</b> a échoué.</p>
-                             <p>Consultez les détails <a href="${env.BUILD_URL}">ici</a>.</p>""",
-                    to: 'idross.benyounes208@gmail.com'
-                )
-            }
-        }
 }
