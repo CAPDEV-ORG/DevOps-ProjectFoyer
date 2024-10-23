@@ -38,7 +38,7 @@ pipeline {
         stage('Display Date') {
             steps {
                 script {
-                    // Display the current date and time in the Jenkins log
+                    // Display the current date2 and time in the Jenkins log
                     def currentDate = new Date()
                     echo "Current Date: ${currentDate}"
                 }
