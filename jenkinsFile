@@ -6,10 +6,6 @@ pipeline {
         maven 'M2_HOME'  // Actual Maven tool name in Jenkins
     }
 
-    environment {
-        SONARQUBE_TOKEN = credentials('sqp_9786d1835b5ed02f423a26241e12cd78b6a88eb2') // Remove trailing spaces
-    }
-
     stages {
         stage('Hello') {
             steps {
@@ -44,14 +40,22 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    // Ensure the token is correctly passed
-                    sh "mvn sonar:sonar -Dsonar.projectKey=sonarTest-2 -Dsonar.host.url=http://192.168.50.4:9000/ -Dsonar.login=${SONARQUBE_TOKEN}"
-                }
-            }
-        }
+        stage('SonarQube Analyze') {
+                    steps {
+                        script {
+                            withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+                                echo "SONAR_TOKEN: $SONAR_TOKEN"
+                                sh """
+                                    mvn clean verify sonar:sonar \
+                                    -Dsonar.projectKey=CapDev \
+                                    -Dsonar.projectName=CapDev \
+                                    -Dsonar.host.url=http://192.168.50.4:9000 \
+                                    -Dsonar.token=\$SONAR_TOKEN
+                                """
+                            }
+                        }
+                    }
+         }
     }
 
     post {
