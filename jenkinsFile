@@ -48,26 +48,24 @@ pipeline {
 
     post {
         success {
-            // Send an email notification when the build is successful
-            emailext (
-                subject: "SUCCESS: Build ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: """<p>Good news! The build was successful.</p>
-                         <p>Job: ${env.JOB_NAME}</p>
-                         <p>Build Number: ${env.BUILD_NUMBER}</p>
-                         <p>URL: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>""",
-                to: 'sayedbenslimane@gmail.com'
-            )
+            emailext subject: 'Jenkins Build Successful: ${JOB_NAME} #${BUILD_NUMBER}',
+                     body: """
+                     <p>Good news! The build for the job '${JOB_NAME}' was successful.</p>
+                     <p>Build URL: ${BUILD_URL}</p>
+                     """,
+                     recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'CulpritsRecipientProvider']],
+                     to: 'sayedbenslimane@gmail.com',
+                     mimeType: 'text/html'
         }
         failure {
-            // Send an email notification when the build fails
-            emailext (
-                subject: "FAILURE: Build ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: """<p>Unfortunately, the build failed.</p>
-                         <p>Job: ${env.JOB_NAME}</p>
-                         <p>Build Number: ${env.BUILD_NUMBER}</p>
-                         <p>URL: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>""",
-                to: 'sayedbenslimane@gmail.com'
-            )
+            emailext subject: 'Jenkins Build Failed: ${JOB_NAME} #${BUILD_NUMBER}',
+                     body: """
+                     <p>Oops! The build for the job '${JOB_NAME}' has failed.</p>
+                     <p>Build URL: ${BUILD_URL}</p>
+                     """,
+                     to: 'sayedbenslimane@gmail.com',
+                     mimeType: 'text/html'
         }
     }
+
 }
