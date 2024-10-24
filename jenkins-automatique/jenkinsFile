@@ -1,0 +1,76 @@
+pipeline {
+    agent any
+
+    tools {
+        jdk 'JAVA_HOME'
+        maven 'M2_HOME'
+    }
+
+    stages {
+        stage('Hello') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+
+        stage('Git') {
+            steps {
+                git branch: 'aziz 6belhadj khaled', changelog: false, poll: false, url: 'https://github.com/CAPDEV-ORG/DevOps-ProjectFoyer.git'
+            }
+        }
+
+        stage('Testing Maven') {
+            steps {
+                sh 'mvn -version'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean install'
+            }
+        }
+
+        stage('Display Date') {
+            steps {
+                script {
+                    def currentDate = new Date()
+                    echo "Current Date: ${currentDate}"
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            emailext(
+                subject: "SUCCESS: Build #${currentBuild.number} - ${currentBuild.fullDisplayName}",
+                body: """
+                    <h2>Build Successful!</h2>
+                    <p>The build was successful!</p>
+                    <p>Check it out here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                    <p>Commit: <strong>${env.GIT_COMMIT}</strong></p>
+                    <p>Branch: <strong>${env.GIT_BRANCH}</strong></p>
+                    <p>Duration: <strong>${currentBuild.durationString}</strong></p>
+                """,
+                to: 'idriss.benyounes@esprit.tn',
+                mimeType: 'text/html' // Use HTML for better formatting
+            )
+        }
+        failure {
+            emailext(
+                subject: "FAILED: Build #${currentBuild.number} - ${currentBuild.fullDisplayName}",
+                body: """
+                    <h2>Build Failed!</h2>
+                    <p>The build has failed.</p>
+                    <p>Check the logs here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                    <p>Commit: <strong>${env.GIT_COMMIT}</strong></p>
+                    <p>Branch: <strong>${env.GIT_BRANCH}</strong></p>
+                    <p>Triggered by: <strong>${currentBuild.getCause(hudson.model.Cause$PushCause)?.shortDescription ?: 'N/A'}</strong></p>
+                """,
+                to: 'idriss.benyounes@esprit.tn',
+                mimeType: 'text/html' // Use HTML for better formatting
+            )
+        }
+    }
+}
