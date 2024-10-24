@@ -6,6 +6,9 @@ pipeline {
         jdk 'JAVA_HOME'  // Replace with the actual JDK tool name set in Jenkins
         maven 'M2_HOME'  // Replace with the actual Maven tool name set in Jenkins
     }
+     environment {
+            SONARQUBE_TOKEN = credentials('sqp_9786d1835b5ed02f423a26241e12cd78b6a88eb2 ')
+     }
 
     stages {
         stage('Hello') {
@@ -44,37 +47,22 @@ pipeline {
                 }
             }
         }
+         stage('SonarQube Analysis') {
+                   steps {
+                       script {
+                            sh "mvn sonar:sonar -Dsonar.projectKey=sonarTest-2 -Dsonar.host.url=http://192.168.50.4:9000/ -Dsonar.login=${SONARQUBE_TOKEN}"
+                       }
+                   }
+         }
     }
-post {
+
+ post {
         success {
-            emailext(
-                subject: "SUCCESS: Build #${currentBuild.number} - ${currentBuild.fullDisplayName}",
-                body: """
-                    <h2>Build Successful!</h2>
-                    <p>The build was successful!</p>
-                    <p>Check it out here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                    <p>Commit: <strong>${env.GIT_COMMIT}</strong></p>
-                    <p>Branch: <strong>${env.GIT_BRANCH}</strong></p>
-                    <p>Duration: <strong>${currentBuild.durationString}</strong></p>
-                """,
-                to: 'kalboussi.yassine@esprit.tn',
-                mimeType: 'text/html' // Use HTML for better formatting
-            )
+            echo "SonarQube analysis completed successfully."
         }
         failure {
-            emailext(
-                subject: "FAILED: Build #${currentBuild.number} - ${currentBuild.fullDisplayName}",
-                body: """
-                    <h2>Build Failed!</h2>
-                    <p>The build has failed.</p>
-                    <p>Check the logs here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                    <p>Commit: <strong>${env.GIT_COMMIT}</strong></p>
-                    <p>Branch: <strong>${env.GIT_BRANCH}</strong></p>
-                    <p>Triggered by: <strong>${currentBuild.getCause(hudson.model.Cause$PushCause)?.shortDescription ?: 'N/A'}</strong></p>
-                """,
-                to: 'kalboussi.yassine@esprit.tn',
-                mimeType: 'text/html' // Use HTML for better formatting
-            )
+            echo "SonarQube analysis failed."
         }
     }
+
 }
