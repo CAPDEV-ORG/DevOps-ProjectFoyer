@@ -46,7 +46,7 @@ pipeline {
             script {
                 emailext(
                     subject: "SUCCESS: Build ${currentBuild.fullDisplayName}",
-                    body: "The build was successful!\n\nCheck it out here: ${env.BUILD_URL}",
+                    body: "The  build was successful\n\nCheck it out here: ${env.BUILD_URL}",
                     to: 'idross.benyounes208@gmail.com'
                 )
             }
