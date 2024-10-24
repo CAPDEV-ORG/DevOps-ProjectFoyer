@@ -48,16 +48,54 @@ pipeline {
     }
 
     post {
-        always {
-            emailext(
-                subject: "Jenkins Build ${currentBuild.fullDisplayName}",
-                body: """The build ${currentBuild.fullDisplayName} has completed.
-                Build URL: ${env.BUILD_URL}""",
-                to: 'sayed.benslimene@esprit.tn',
-                from: 'sayedbenslimane@gmail.com',
-                attachLog: true,
-                mimeType: 'text/plain'
-            )
+        success {
+            script {
+                def changes = sh(script: 'git diff --name-status HEAD^ HEAD', returnStdout: true).trim()
+                emailext (
+                    subject: "✅ Job build réussi '${env.JOB_NAME} [#${env.BUILD_NUMBER}]'",
+                    body: """
+                        <html>
+                            <body>
+                                <h2 style="color: green;">✅ SUCCÈS : Job '${env.JOB_NAME} [#${env.BUILD_NUMBER}]'</h2>
+                                <p>Le job s'est terminé avec succès.</p>
+                                <h3>Détails :</h3>
+                                <ul>
+                                    <li><strong>Numéro de build :</strong> ${env.BUILD_NUMBER}</li>
+                                    <li><strong>Nom du job :</strong> ${env.JOB_NAME}</li>
+                                    <li><strong>Fichiers modifiés :</strong><pre>${changes}</pre></li>
+                                </ul>
+                            </body>
+                        </html>
+                    """,
+                    mimeType: 'text/html',
+                    to: "sayed.benslimene@esprit.tn"
+                )
+            }
+        }
+
+        failure {
+            script {
+                def changes = sh(script: 'git diff --name-status HEAD^ HEAD', returnStdout: true).trim()
+                emailext (
+                    subject: "❌ Échec de la construction du job '${env.JOB_NAME} [#${env.BUILD_NUMBER}]'",
+                    body: """
+                        <html>
+                            <body>
+                                <h2 style="color: red;">❌ ÉCHEC : Job '${env.JOB_NAME} [#${env.BUILD_NUMBER}]'</h2>
+                                <p>Le job a échoué.</p>
+                                <h3>Détails :</h3>
+                                <ul>
+                                    <li><strong>Nom du job :</strong> ${env.JOB_NAME}</li>
+                                    <li><strong>Numéro de build :</strong> ${env.BUILD_NUMBER}</li>
+                                    <li><strong>Fichiers modifiés :</strong><pre>${changes}</pre></li>
+                                </ul>
+                            </body>
+                        </html>
+                    """,
+                    mimeType: 'text/html',
+                    to: "sayed.benslimene@esprit.tn"
+                )
+            }
         }
     }
 }
