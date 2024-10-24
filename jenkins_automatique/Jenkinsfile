@@ -43,31 +43,19 @@ pipeline {
 
     post {
         success {
-            script {
-                emailext(
-                    subject: "SUCCESS: Build ${currentBuild.fullDisplayName}",
-                    body: "The  build was successful\n\nCheck it out here: ${env.BUILD_URL}",
-                    to: 'idriss.bys@gmail.com'
-                )
-            }
-        }
-        unstable {
-            script {
-                emailext(
-                    subject: "UNSTABLE: Build ${currentBuild.fullDisplayName}",
-                    body: "The build is unstable.\n\nCheck the details here: ${env.BUILD_URL}",
-                    to: 'idriss.bys@gmail.com'
-                )
-            }
+            emailext(
+                subject: "SUCCESS: Build ${currentBuild.fullDisplayName}",
+                body: "The build was successful!\n\nCheck it out here: ${env.BUILD_URL}",
+                to: 'idriss.bys@gmail.com'
+            )
         }
         failure {
-            script {
-                emailext(
-                    subject: "FAILED: Build ${currentBuild.fullDisplayName}",
-                    body: "The build has failed.\n\nCheck the logs here: ${env.BUILD_URL}",
-                    to: 'idriss.bys@gmail.com'
-                )
-            }
+            emailext(
+                subject: "FAILED: Build ${currentBuild.fullDisplayName}",
+                body: "The build has failed.\n\nCheck the logs here: ${env.BUILD_URL}",
+                to: 'idriss.bys@gmail.com'
+            )
         }
     }
+
 }
