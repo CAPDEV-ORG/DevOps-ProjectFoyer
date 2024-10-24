@@ -20,14 +20,14 @@ pipeline {
         stage('Build and Analyze') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'sonarToken', variable: 'SONAR_TOKEN')]) {
-                        echo "sonarToken: $SONAR_TOKEN"
+                    withCredentials([string(credentialsId: 'sonarToken', variable: 'sonarToken')]) {
+                        echo "sonarToken: $SsonarToken"
                         sh """
                             mvn clean verify sonar:sonar \
                             -Dsonar.projectKey=capdev \
                             -Dsonar.projectName=capdev \
                             -Dsonar.host.url=http://192.168.50.4:9000 \
-                            -Dsonar.token=\$SONAR_TOKEN
+                            -Dsonar.token=\$sonarToken
                         """
                     }
                 }
