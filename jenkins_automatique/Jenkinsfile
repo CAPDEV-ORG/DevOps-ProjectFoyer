@@ -53,7 +53,7 @@ pipeline {
                     <p>Branch: <strong>${env.GIT_BRANCH}</strong></p>
                     <p>Duration: <strong>${currentBuild.durationString}</strong></p>
                 """,
-                to: 'idirss.benyounes@esprit.tn',
+                to: 'idriss.benyounes@esprit.tn',
                 mimeType: 'text/html' // Use HTML for better formatting
             )
         }
@@ -68,7 +68,7 @@ pipeline {
                     <p>Branch: <strong>${env.GIT_BRANCH}</strong></p>
                     <p>Triggered by: <strong>${currentBuild.getCause(hudson.model.Cause$PushCause)?.shortDescription ?: 'N/A'}</strong></p>
                 """,
-                to: 'idirss.benyounes@esprit.tn',
+                to: 'idriss.benyounes@esprit.tn',
                 mimeType: 'text/html' // Use HTML for better formatting
             )
         }
