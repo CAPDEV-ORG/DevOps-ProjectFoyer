@@ -42,17 +42,16 @@ pipeline {
         stage('Build and Analyze') {
             steps {
                 script {
-                    echo "SONAR_TOKEN: $SONAR_TOKEN"
-
-                    sh """
-                        mvn clean verify sonar:sonar \
-                        -Dsonar.projectKey=CapDev \
-                        -Dsonar.projectName=CapDev \
-                        -Dsonar.host.url=http://192.168.50.4:9000 \
-                        -Dsonar.token=\$SONAR_TOKEN
-                    """
-
-                }
+                    withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+                        echo "SONAR_TOKEN: $SONAR_TOKEN"
+                        sh """
+                            mvn clean verify sonar:sonar \
+                            -Dsonar.projectKey=CapDev \
+                            -Dsonar.projectName=CapDev \
+                            -Dsonar.host.url=http://192.168.50.4:9000 \
+                            -Dsonar.token=\$SONAR_TOKEN
+                        """
+                    }
             }
         }
     }
@@ -85,7 +84,7 @@ pipeline {
                     <p>Triggered by: <strong>${currentBuild.getCause(hudson.model.Cause$PushCause)?.shortDescription ?: 'N/A'}</strong></p>
                 """,
                 to: 'idriss.benyounes@esprit.tn',
-                mimeType: 'text/html' // Use HTML for better formatting
+                mimeType: 'text/html'
             )
         }
     }
