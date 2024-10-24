@@ -50,7 +50,6 @@ pipeline {
     post {
         success {
             script {
-                def changes = sh(script: 'git diff --name-status HEAD^ HEAD', returnStdout: true).trim()
                 emailext (
                     subject: "✅ Job build réussi '${env.JOB_NAME} [#${env.BUILD_NUMBER}]'",
                     body: """
@@ -62,7 +61,6 @@ pipeline {
                                 <ul>
                                     <li><strong>Numéro de build :</strong> ${env.BUILD_NUMBER}</li>
                                     <li><strong>Nom du job :</strong> ${env.JOB_NAME}</li>
-                                    <li><strong>Fichiers modifiés :</strong><pre>${changes}</pre></li>
                                 </ul>
                             </body>
                         </html>
@@ -75,7 +73,6 @@ pipeline {
 
         failure {
             script {
-                def changes = sh(script: 'git diff --name-status HEAD^ HEAD', returnStdout: true).trim()
                 emailext (
                     subject: "❌ Échec de la construction du job '${env.JOB_NAME} [#${env.BUILD_NUMBER}]'",
                     body: """
@@ -87,7 +84,6 @@ pipeline {
                                 <ul>
                                     <li><strong>Nom du job :</strong> ${env.JOB_NAME}</li>
                                     <li><strong>Numéro de build :</strong> ${env.BUILD_NUMBER}</li>
-                                    <li><strong>Fichiers modifiés :</strong><pre>${changes}</pre></li>
                                 </ul>
                             </body>
                         </html>
