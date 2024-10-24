@@ -6,6 +6,7 @@ pipeline {
         jdk 'JAVA_HOME'  // Replace with the actual JDK tool name set in Jenkins
         maven 'M2_HOME'  // Replace with the actual Maven tool name set in Jenkins
     }
+
      environment {
             SONARQUBE_TOKEN = credentials('sqp_9786d1835b5ed02f423a26241e12cd78b6a88eb2 ')
      }
