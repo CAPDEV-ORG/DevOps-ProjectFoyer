@@ -2,9 +2,8 @@ pipeline {
     agent any
 
     tools {
-        // Set your actual JDK and Maven installations here as configured in Jenkins
-        jdk 'JAVA_HOME'  // Replace with actual JDK tool name
-        maven 'M2_HOME'  // Replace with actual Maven tool name
+        jdk 'JAVA_HOME'
+        maven 'M2_HOME'
     }
 
     stages {
@@ -16,29 +15,31 @@ pipeline {
 
         stage('Git') {
             steps {
-                // Ensure the branch and URL are correct
-                git branch: 'Sayed-Ben-Slimene', changelog: false, poll: false, url: 'https://github.com/CAPDEV-ORG/DevOps-ProjectFoyer.git'
+                git branch: 'Sayed-Ben-Slimene', url: 'https://github.com/CAPDEV-ORG/DevOps-ProjectFoyer.git'
             }
         }
 
         stage('Testing mvn') {
             steps {
-                // Display Maven version
                 sh 'mvn --version'
             }
         }
 
         stage('Build') {
             steps {
-                // Clean and install the Maven project
                 sh 'mvn clean install'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'mvn test'
             }
         }
 
         stage('Display Date') {
             steps {
                 script {
-                    // Display the current date and time in Jenkins logs
                     def currentDate = new Date()
                     echo "Current Date: ${currentDate}"
                 }
@@ -47,25 +48,16 @@ pipeline {
     }
 
     post {
-        success {
-            emailext subject: 'Jenkins Build Successful: ${JOB_NAME} #${BUILD_NUMBER}',
-                     body: """
-                     <p>Good news! The build for the job '${JOB_NAME}' was successful.</p>
-                     <p>Build URL: ${BUILD_URL}</p>
-                     """,
-                     recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'CulpritsRecipientProvider']],
-                     to: 'sayedbenslimane@gmail.com',
-                     mimeType: 'text/html'
-        }
-        failure {
-            emailext subject: 'Jenkins Build Failed: ${JOB_NAME} #${BUILD_NUMBER}',
-                     body: """
-                     <p>Oops! The build for the job '${JOB_NAME}' has failed.</p>
-                     <p>Build URL: ${BUILD_URL}</p>
-                     """,
-                     to: 'sayedbenslimane@gmail.com',
-                     mimeType: 'text/html'
+        always {
+            emailext(
+                subject: "Jenkins Build ${currentBuild.fullDisplayName}",
+                body: """The build ${currentBuild.fullDisplayName} has completed.
+                Build URL: ${env.BUILD_URL}""",
+                to: 'sayed.benslimene@esprit.tn',
+                from: 'sayedbenslimane@gmail.com',
+                attachLog: true,
+                mimeType: 'text/plain'
+            )
         }
     }
-
 }
