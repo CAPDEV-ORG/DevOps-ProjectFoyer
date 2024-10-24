@@ -42,7 +42,7 @@ pipeline {
         stage('Build and Analyze') {
             steps {
                 script {
-                    echo "SONAR_TOKEN: ${env.SONAR_TOKEN}"
+                    echo "SONAR_TOKEN: ${env.CapDev}"
 
                     sh """
                         mvn clean verify sonar:sonar \
