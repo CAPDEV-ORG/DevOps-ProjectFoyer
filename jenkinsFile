@@ -45,4 +45,36 @@ pipeline {
             }
         }
     }
+post {
+        success {
+            emailext(
+                subject: "SUCCESS: Build #${currentBuild.number} - ${currentBuild.fullDisplayName}",
+                body: """
+                    <h2>Build Successful!</h2>
+                    <p>The build was successful!</p>
+                    <p>Check it out here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                    <p>Commit: <strong>${env.GIT_COMMIT}</strong></p>
+                    <p>Branch: <strong>${env.GIT_BRANCH}</strong></p>
+                    <p>Duration: <strong>${currentBuild.durationString}</strong></p>
+                """,
+                to: 'kalboussi.yassine@esprit.tn',
+                mimeType: 'text/html' // Use HTML for better formatting
+            )
+        }
+        failure {
+            emailext(
+                subject: "FAILED: Build #${currentBuild.number} - ${currentBuild.fullDisplayName}",
+                body: """
+                    <h2>Build Failed!</h2>
+                    <p>The build has failed.</p>
+                    <p>Check the logs here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                    <p>Commit: <strong>${env.GIT_COMMIT}</strong></p>
+                    <p>Branch: <strong>${env.GIT_BRANCH}</strong></p>
+                    <p>Triggered by: <strong>${currentBuild.getCause(hudson.model.Cause$PushCause)?.shortDescription ?: 'N/A'}</strong></p>
+                """,
+                to: 'kalboussi.yassine@esprit.tn',
+                mimeType: 'text/html' // Use HTML for better formatting
+            )
+        }
+    }
 }
