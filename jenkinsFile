@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     tools {
-        // Make sure 'JAVA_HOME' and 'M2_HOME' refer to actual tool names installed in Jenkins
-        jdk 'JAVA_HOME'  // Replace with the actcccual JDK tool name from Jenkins
-        maven 'M2_HOME'  // Replace with the actual Maven tool name from Jenkins
+        // Set your actual JDK and Maven installations here as configured in Jenkins
+        jdk 'JAVA_HOME'  // Replace with actual JDK tool name
+        maven 'M2_HOME'  // Replace with actual Maven tool name
     }
 
     stages {
@@ -16,21 +16,21 @@ pipeline {
 
         stage('Git') {
             steps {
-                // Make sure the branch exists, and the URL is correct
+                // Ensure the branch and URL are correct
                 git branch: 'Sayed-Ben-Slimene', changelog: false, poll: false, url: 'https://github.com/CAPDEV-ORG/DevOps-ProjectFoyer.git'
             }
         }
 
         stage('Testing mvn') {
             steps {
-                // This will display the installed Maven version
+                // Display Maven version
                 sh 'mvn --version'
             }
         }
 
         stage('Build') {
             steps {
-                // Clean and install Maven dependencies
+                // Clean and install the Maven project
                 sh 'mvn clean install'
             }
         }
@@ -38,11 +38,36 @@ pipeline {
         stage('Display Date') {
             steps {
                 script {
-                    // Display the current date2222 and time in the Jenkins log
+                    // Display the current date and time in Jenkins logs
                     def currentDate = new Date()
                     echo "Current Date: ${currentDate}"
                 }
             }
+        }
+    }
+
+    post {
+        success {
+            // Send an email notification when the build is successful
+            emailext (
+                subject: "SUCCESS: Build ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """<p>Good news! The build was successful.</p>
+                         <p>Job: ${env.JOB_NAME}</p>
+                         <p>Build Number: ${env.BUILD_NUMBER}</p>
+                         <p>URL: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>""",
+                to: 'sayedbenslimane@gmail.com'
+            )
+        }
+        failure {
+            // Send an email notification when the build fails
+            emailext (
+                subject: "FAILURE: Build ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """<p>Unfortunately, the build failed.</p>
+                         <p>Job: ${env.JOB_NAME}</p>
+                         <p>Build Number: ${env.BUILD_NUMBER}</p>
+                         <p>URL: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>""",
+                to: 'sayedbenslimane@gmail.com'
+            )
         }
     }
 }
