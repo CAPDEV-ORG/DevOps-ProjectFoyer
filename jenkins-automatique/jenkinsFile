@@ -15,7 +15,7 @@ pipeline {
 
         stage('Git') {
             steps {
-                git branch: 'aziz 6belhadj khaled', changelog: false, poll: false, url: 'https://github.com/CAPDEV-ORG/DevOps-ProjectFoyer.git'
+                git branch: 'aziz', changelog: false, poll: false, url: 'https://github.com/CAPDEV-ORG/DevOps-ProjectFoyer.git'
             }
         }
 
