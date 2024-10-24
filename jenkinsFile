@@ -68,7 +68,7 @@ pipeline {
                         </html>
                     """,
                     mimeType: 'text/html',
-                    to: "sayed.benslimene@esprit.tn"
+                    to: "sayedbenslimane@gmail.com"
                 )
             }
         }
@@ -93,7 +93,7 @@ pipeline {
                         </html>
                     """,
                     mimeType: 'text/html',
-                    to: "sayed.benslimene@esprit.tn"
+                    to: "sayedbenslimane@gmail.com"
                 )
             }
         }
