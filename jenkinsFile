@@ -21,7 +21,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'sonarToken', variable: 'sonarToken')]) {
-                        echo "sonarToken: $SsonarToken"
+                        echo "sonarToken: $sonarToken"
                         sh """
                             mvn clean verify sonar:sonar \
                             -Dsonar.projectKey=capdev \
