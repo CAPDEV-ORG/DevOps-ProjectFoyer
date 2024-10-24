@@ -47,7 +47,7 @@ pipeline {
                 emailext(
                     subject: "SUCCESS: Build ${currentBuild.fullDisplayName}",
                     body: "The  build was successful\n\nCheck it out here: ${env.BUILD_URL}",
-                    to: 'idross.benyounes208@gmail.com'
+                    to: 'idriss.bys@gmail.com'
                 )
             }
         }
@@ -56,7 +56,7 @@ pipeline {
                 emailext(
                     subject: "UNSTABLE: Build ${currentBuild.fullDisplayName}",
                     body: "The build is unstable.\n\nCheck the details here: ${env.BUILD_URL}",
-                    to: 'idross.benyounes208@gmail.com'
+                    to: 'idriss.bys@gmail.com'
                 )
             }
         }
@@ -65,7 +65,7 @@ pipeline {
                 emailext(
                     subject: "FAILED: Build ${currentBuild.fullDisplayName}",
                     body: "The build has failed.\n\nCheck the logs here: ${env.BUILD_URL}",
-                    to: 'idross.benyounes208@gmail.com'
+                    to: 'idriss.bys@gmail.com'
                 )
             }
         }
