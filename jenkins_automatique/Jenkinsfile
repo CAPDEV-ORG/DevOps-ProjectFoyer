@@ -58,8 +58,7 @@ pipeline {
                     <p>Check it out here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
                     <p>Commit: <strong>${env.GIT_COMMIT}</strong></p>
                     <p>Branch: <strong>${env.GIT_BRANCH}</strong></p>
-                    <p>Triggered by: ${currentBuild.triggeredBy}</p>
-                    <p>Build Duration: ${currentBuild.durationString}</p>
+                    <p>Triggered by: ${currentBuild.getCause(hudson.model.Cause$PushCause)?.shortDescription ?: 'N/A'}</p>
                 """,
                 to: 'idross.benyounes208@gmail.com',
                 mimeType: 'text/html'
@@ -74,7 +73,7 @@ pipeline {
                     <p>Check the details here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
                     <p>Commit: <strong>${env.GIT_COMMIT}</strong></p>
                     <p>Branch: <strong>${env.GIT_BRANCH}</strong></p>
-                    <p>Triggered by: ${currentBuild.triggeredBy}</p>
+                    <p>Triggered by: ${currentBuild.getCause(hudson.model.Cause$PushCause)?.shortDescription ?: 'N/A'}</p>
                 """,
                 to: 'idross.benyounes208@gmail.com',
                 mimeType: 'text/html'
@@ -89,11 +88,12 @@ pipeline {
                     <p>Check the logs here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
                     <p>Commit: <strong>${env.GIT_COMMIT}</strong></p>
                     <p>Branch: <strong>${env.GIT_BRANCH}</strong></p>
-                    <p>Triggered by: ${currentBuild.triggeredBy}</p>
+                    <p>Triggered by: ${currentBuild.getCause(hudson.model.Cause$PushCause)?.shortDescription ?: 'N/A'}</p>
                 """,
                 to: 'idross.benyounes208@gmail.com',
                 mimeType: 'text/html'
             )
         }
     }
+
 }
