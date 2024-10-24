@@ -2,14 +2,13 @@ pipeline {
     agent any
 
     tools {
-        // Ensure that 'jdk' and 'maven' correspond to actual tool names configured in Jenkins
-        jdk 'JAVA_HOME'  // Replace with the actual JDK tool name set in Jenkins
-        maven 'M2_HOME'  // Replace with the actual Maven tool name set in Jenkins
+        jdk 'JAVA_HOME'  // Actual JDK tool name in Jenkins
+        maven 'M2_HOME'  // Actual Maven tool name in Jenkins
     }
 
-     environment {
-            SONARQUBE_TOKEN = credentials('sqp_9786d1835b5ed02f423a26241e12cd78b6a88eb2 ')
-     }
+    environment {
+        SONARQUBE_TOKEN = credentials('sqp_9786d1835b5ed02f423a26241e12cd78b6a88eb2') // Remove trailing spaces
+    }
 
     stages {
         stage('Hello') {
@@ -20,21 +19,18 @@ pipeline {
 
         stage('Git') {
             steps {
-                // Ensure that the branch name and repository URL are correct
                 git branch: 'yassine-kalboussi', changelog: false, poll: false, url: 'https://github.com/CAPDEV-ORG/DevOps-ProjectFoyer.git'
             }
         }
 
         stage('Testing mvn') {
             steps {
-                // Display the installed Maven version
                 sh 'mvn --version'
             }
         }
 
         stage('Build') {
             steps {
-                // Clean and install Maven dependencies
                 sh 'mvn clean install'
             }
         }
@@ -42,22 +38,23 @@ pipeline {
         stage('Display Date') {
             steps {
                 script {
-                    // Display the current date and time in the Jenkins log
                     def currentDate = new Date()
                     echo "Current Date: ${currentDate}"
                 }
             }
         }
-         stage('SonarQube Analysis') {
-                   steps {
-                       script {
-                            sh "mvn sonar:sonar -Dsonar.projectKey=sonarTest-2 -Dsonar.host.url=http://192.168.50.4:9000/ -Dsonar.login=${SONARQUBE_TOKEN}"
-                       }
-                   }
-         }
+
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    // Ensure the token is correctly passed
+                    sh "mvn sonar:sonar -Dsonar.projectKey=sonarTest-2 -Dsonar.host.url=http://192.168.50.4:9000/ -Dsonar.login=${SONARQUBE_TOKEN}"
+                }
+            }
+        }
     }
 
- post {
+    post {
         success {
             echo "SonarQube analysis completed successfully."
         }
@@ -65,5 +62,4 @@ pipeline {
             echo "SonarQube analysis failed."
         }
     }
-
 }
