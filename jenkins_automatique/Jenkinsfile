@@ -42,18 +42,17 @@ pipeline {
         stage('Build and Analyze') {
             steps {
                 script {
-                    // Run Maven clean, verify, and SonarQube analysis
                     sh """
                         mvn clean verify sonar:sonar \
                         -Dsonar.projectKey=CapDev \
-                        -Dsonar.projectName='CapDev' \
+                        -Dsonar.projectName=CapDev \
                         -Dsonar.host.url=http://192.168.50.4:9000 \
-                        -Dsonar.login=${env.CAPDEV} // Ensure this matches your credential ID
+                        -Dsonar.token=${env.CapDev}
                     """
                 }
             }
         }
-
+    }
 
     post {
         success {
