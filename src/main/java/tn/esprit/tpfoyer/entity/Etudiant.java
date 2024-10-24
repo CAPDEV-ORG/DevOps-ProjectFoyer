@@ -17,7 +17,7 @@ import java.util.Set;
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Etudiant {
-
+//tetst
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long idEtudiant;
