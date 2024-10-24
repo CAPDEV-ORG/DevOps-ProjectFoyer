@@ -13,13 +13,20 @@ pipeline {
             }
         }
         
-        stage('Git') {
+        stage('Git Checkout') {
             steps {
-                git branch: 'idriss_ben_younes', changelog: false, poll: false, url: 'https://github.com/CAPDEV-ORG/DevOps-ProjectFoyer.git'
+                script {
+                    try {
+                        git branch: 'idriss_ben_younes', changelog: false, poll: false, url: 'https://github.com/CAPDEV-ORG/DevOps-ProjectFoyer.git'
+                    } catch (Exception e) {
+                        currentBuild.result = 'FAILURE'
+                        error("Git checkout failed: ${e.message}")
+                    }
+                }
             }
         }
 
-        stage('Testing mvn') {
+        stage('Testing Maven') {
             steps {
                 sh 'mvn -version'
             }
@@ -41,53 +48,52 @@ pipeline {
         }
     }
 
- post {
-     success {
-         emailext(
-             subject: "SUCCESS: Build #${currentBuild.number} - ${currentBuild.fullDisplayName}",
-             body: """
-                 <h2>Build Successful!</h2>
-                 <p>The build was successful!</p>
-                 <p>Check it out here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                 <p>Commit: <strong>${env.GIT_COMMIT}</strong></p>
-                 <p>Branch: <strong>${env.GIT_BRANCH}</strong></p>
-                 <p>Triggered by: ${currentBuild.triggeredBy}</p>
-             """,
-             to: 'idross.benyounes208@gmail.com',
-             mimeType: 'text/html' // Send the email as HTML for better formatting
-         )
-     }
-     unstable {
-         emailext(
-             subject: "UNSTABLE: Build #${currentBuild.number} - ${currentBuild.fullDisplayName}",
-             body: """
-                 <h2>Build Unstable!</h2>
-                 <p>The build is unstable.</p>
-                 <p>Check the details here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                 <p>Commit: <strong>${env.GIT_COMMIT}</strong></p>
-                 <p>Branch: <strong>${env.GIT_BRANCH}</strong></p>
-                 <p>Triggered by: ${currentBuild.triggeredBy}</p>
-             """,
-             to: 'idross.benyounes208@gmail.com',
-             mimeType: 'text/html'
-         )
-     }
-     failure {
-         emailext(
-             subject: "FAILED: Build #${currentBuild.number} - ${currentBuild.fullDisplayName}",
-             body: """
-                 <h2>Build Failed!</h2>
-                 <p>The build has failed.</p>
-                 <p>Check the logs here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                 <p>Commit: <strong>${env.GIT_COMMIT}</strong></p>
-                 <p>Branch: <strong>${env.GIT_BRANCH}</strong></p>
-                 <p>Triggered by: ${currentBuild.triggeredBy}</p>
-             """,
-             to: 'idross.benyounes208@gmail.com',
-             mimeType: 'text/html'
-         )
-     }
- }
-
-
+    post {
+        success {
+            emailext(
+                subject: "SUCCESS: Build #${currentBuild.number} - ${currentBuild.fullDisplayName}",
+                body: """
+                    <h2>Build Successful!</h2>
+                    <p>The build was successful!</p>
+                    <p>Check it out here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                    <p>Commit: <strong>${env.GIT_COMMIT}</strong></p>
+                    <p>Branch: <strong>${env.GIT_BRANCH}</strong></p>
+                    <p>Triggered by: ${currentBuild.triggeredBy}</p>
+                    <p>Build Duration: ${currentBuild.durationString}</p>
+                """,
+                to: 'idross.benyounes208@gmail.com',
+                mimeType: 'text/html'
+            )
+        }
+        unstable {
+            emailext(
+                subject: "UNSTABLE: Build #${currentBuild.number} - ${currentBuild.fullDisplayName}",
+                body: """
+                    <h2>Build Unstable!</h2>
+                    <p>The build is unstable.</p>
+                    <p>Check the details here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                    <p>Commit: <strong>${env.GIT_COMMIT}</strong></p>
+                    <p>Branch: <strong>${env.GIT_BRANCH}</strong></p>
+                    <p>Triggered by: ${currentBuild.triggeredBy}</p>
+                """,
+                to: 'idross.benyounes208@gmail.com',
+                mimeType: 'text/html'
+            )
+        }
+        failure {
+            emailext(
+                subject: "FAILED: Build #${currentBuild.number} - ${currentBuild.fullDisplayName}",
+                body: """
+                    <h2>Build Failed!</h2>
+                    <p>The build has failed.</p>
+                    <p>Check the logs here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                    <p>Commit: <strong>${env.GIT_COMMIT}</strong></p>
+                    <p>Branch: <strong>${env.GIT_BRANCH}</strong></p>
+                    <p>Triggered by: ${currentBuild.triggeredBy}</p>
+                """,
+                to: 'idross.benyounes208@gmail.com',
+                mimeType: 'text/html'
+            )
+        }
+    }
 }
