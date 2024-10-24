@@ -35,8 +35,38 @@ pipeline {
             steps {
                 script {
                     def currentDate = new Date()
-                    echo "Date actuelle : ${currentDate}"
+                    echo "Current Date: ${currentDate}"
                 }
+            }
+        }
+    }
+
+    post {
+        success {
+            script {
+                emailext(
+                    subject: "SUCCESS: Build ${currentBuild.fullDisplayName}",
+                    body: "The build was successful!\n\nCheck it out here: ${env.BUILD_URL}",
+                    to: 'idriss.benyounes@esprit.tn'
+                )
+            }
+        }
+        unstable {
+            script {
+                emailext(
+                    subject: "UNSTABLE: Build ${currentBuild.fullDisplayName}",
+                    body: "The build is unstable.\n\nCheck the details here: ${env.BUILD_URL}",
+                    to: 'idriss.benyounes@esprit.tn'
+                )
+            }
+        }
+        failure {
+            script {
+                emailext(
+                    subject: "FAILED: Build ${currentBuild.fullDisplayName}",
+                    body: "The build has failed.\n\nCheck the logs here: ${env.BUILD_URL}",
+                    to: 'idriss.benyounes@esprit.tn'
+                )
             }
         }
     }
