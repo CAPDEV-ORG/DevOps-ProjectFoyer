@@ -25,7 +25,7 @@ pipeline {
                         sh """
                             mvn clean verify sonar:sonar \
                             -Dsonar.projectKey=capdev \
-                            -Dsonar.projectName=capdev \
+                            -Dsonar.projectName=ca-pdev \
                             -Dsonar.host.url=http://192.168.50.4:9000 \
                             -Dsonar.token=\$sonarToken
                         """
