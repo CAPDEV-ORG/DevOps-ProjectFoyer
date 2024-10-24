@@ -13,16 +13,9 @@ pipeline {
             }
         }
         
-        stage('Git Checkout') {
+        stage('Git') {
             steps {
-                script {
-                    try {
-                        git branch: 'idriss_ben_younes', changelog: false, poll: false, url: 'https://github.com/CAPDEV-ORG/DevOps-ProjectFoyer.git'
-                    } catch (Exception e) {
-                        currentBuild.result = 'FAILURE'
-                        error("Git checkout failed: ${e.message}")
-                    }
-                }
+                git branch: 'idriss_ben_younes', changelog: false, poll: false, url: 'https://github.com/CAPDEV-ORG/DevOps-ProjectFoyer.git'
             }
         }
 
@@ -58,25 +51,10 @@ pipeline {
                     <p>Check it out here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
                     <p>Commit: <strong>${env.GIT_COMMIT}</strong></p>
                     <p>Branch: <strong>${env.GIT_BRANCH}</strong></p>
-                    <p>Triggered by: ${currentBuild.getCause(hudson.model.Cause$PushCause)?.shortDescription ?: 'N/A'}</p>
+                    <p>Duration: <strong>${currentBuild.durationString}</strong></p>
                 """,
-                to: 'idross.benyounes208@gmail.com',
-                mimeType: 'text/html'
-            )
-        }
-        unstable {
-            emailext(
-                subject: "UNSTABLE: Build #${currentBuild.number} - ${currentBuild.fullDisplayName}",
-                body: """
-                    <h2>Build Unstable!</h2>
-                    <p>The build is unstable.</p>
-                    <p>Check the details here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                    <p>Commit: <strong>${env.GIT_COMMIT}</strong></p>
-                    <p>Branch: <strong>${env.GIT_BRANCH}</strong></p>
-                    <p>Triggered by: ${currentBuild.getCause(hudson.model.Cause$PushCause)?.shortDescription ?: 'N/A'}</p>
-                """,
-                to: 'idross.benyounes208@gmail.com',
-                mimeType: 'text/html'
+                to: 'idriss.benyounes@esprit.tn',
+                mimeType: 'text/html' // Use HTML for better formatting
             )
         }
         failure {
@@ -88,12 +66,11 @@ pipeline {
                     <p>Check the logs here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
                     <p>Commit: <strong>${env.GIT_COMMIT}</strong></p>
                     <p>Branch: <strong>${env.GIT_BRANCH}</strong></p>
-                    <p>Triggered by: ${currentBuild.getCause(hudson.model.Cause$PushCause)?.shortDescription ?: 'N/A'}</p>
+                    <p>Triggered by: <strong>${currentBuild.getCause(hudson.model.Cause$PushCause)?.shortDescription ?: 'N/A'}</strong></p>
                 """,
                 to: 'idross.benyounes208@gmail.com',
-                mimeType: 'text/html'
+                mimeType: 'text/html' // Use HTML for better formatting
             )
         }
     }
-
 }
