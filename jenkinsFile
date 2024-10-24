@@ -8,11 +8,29 @@ pipeline {
                     url: 'https://github.com/CAPDEV-ORG/DevOps-ProjectFoyer.git'
             }
         }
+
         stage('Compile Stage') {
             steps {
                 echo 'Building the Spring Boot project...'
                 // Run Maven clean and install to build the project
                 sh 'mvn clean install'
+            }
+        }
+
+        stage('Build and Analyze') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'sonarToken', variable: 'SONAR_TOKEN')]) {
+                        echo "sonarToken: $SONAR_TOKEN"
+                        sh """
+                            mvn clean verify sonar:sonar \
+                            -Dsonar.projectKey=capdev \
+                            -Dsonar.projectName=capdev \
+                            -Dsonar.host.url=http://192.168.50.4:9000 \
+                            -Dsonar.token=\$SONAR_TOKEN
+                        """
+                    }
+                }
             }
         }
     }
