@@ -1,0 +1,69 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('git-Checkout') {
+            steps {
+                git branch: 'oussama-ben-hamida',
+                    url: 'https://github.com/CAPDEV-ORG/DevOps-ProjectFoyer.git'
+            }
+        }
+        stage('Compile Stage') {
+            steps {
+                echo 'Building the Spring Boot project...'
+                // Run Maven clean and install to build the project
+                sh 'mvn clean install'
+            }
+        }
+    }
+
+    post {
+        success {
+            script {
+                emailext (
+                    subject: "✅ Job build réussi '${env.JOB_NAME} [#${env.BUILD_NUMBER}]'",
+                    body: """
+                        <html>
+                            <body>
+                                <h2 style="color: green;">✅ SUCCÈS : Job '${env.JOB_NAME} [#${env.BUILD_NUMBER}]'</h2>
+                                <p>Le job s'est terminé avec succès.</p>
+                                <h3>Détails :</h3>
+                                <ul>
+                                    <li><strong>Numéro de build :</strong> ${env.BUILD_NUMBER}</li>
+                                    <li><strong>Nom du job :</strong> ${env.JOB_NAME}</li>
+                                </ul>
+                            </body>
+                        </html>
+                    """,
+                    mimeType: 'text/html',
+                    to: "oussama21072000@gmail.com"
+                )
+            }
+            echo 'Build succeeded!'
+        }
+
+        failure {
+            script {
+                emailext (
+                    subject: "❌ Échec de la construction du job '${env.JOB_NAME} [#${env.BUILD_NUMBER}]'",
+                    body: """
+                        <html>
+                            <body>
+                                <h2 style="color: red;">❌ ÉCHEC : Job '${env.JOB_NAME} [#${env.BUILD_NUMBER}]'</h2>
+                                <p>Le job a échoué.</p>
+                                <h3>Détails :</h3>
+                                <ul>
+                                    <li><strong>Nom du job :</strong> ${env.JOB_NAME}</li>
+                                    <li><strong>Numéro de build :</strong> ${env.BUILD_NUMBER}</li>
+                                </ul>
+                            </body>
+                        </html>
+                    """,
+                    mimeType: 'text/html',
+                    to: "oussama21072000@gmail.com"
+                )
+            }
+            echo 'Build failed!'
+        }
+    }
+}
