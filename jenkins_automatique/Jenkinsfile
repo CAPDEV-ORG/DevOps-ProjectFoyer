@@ -55,13 +55,13 @@ pipeline {
                 }
             }
         }
-                stage('Deploy nexus') {
-                    steps {
-                        script {
-                            sh 'mvn deploy -DskipTests'
-                        }
-                    }
+         stage('Deploy nexus') {
+            steps {
+                script {
+                    sh 'mvn deploy -DskipTests'
                 }
+            }
+         }
     }
 
     post {
