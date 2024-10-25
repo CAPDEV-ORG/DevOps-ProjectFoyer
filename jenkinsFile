@@ -27,7 +27,7 @@ pipeline {
                             -Dsonar.projectKey=sonarToken \
                             -Dsonar.projectName=capdev \
                             -Dsonar.host.url=http://192.168.50.4:9000 \
-                            -Dsonar.token=\$sonarToken
+                            -Dsonar.token= sqp_3db384c75bb6b104d9e8bbb9b735d24f0194e165
                         """
                     }
                 }
