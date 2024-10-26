@@ -12,7 +12,20 @@ pipeline {
                 echo 'Hello World'
             }
         }
-        
+        stage('Git') {
+            steps {
+                script {
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: 'idriss_ben_younes']],
+                        userRemoteConfigs: [[
+                            url: 'https://github.com/CAPDEV-ORG/DevOps-ProjectFoyer.git',
+                        ]]
+                    ])
+                }
+            }
+        }
+
         stage('Git') {
             steps {
                 git branch: 'idriss_ben_younes', changelog: false, poll: false, url: 'https://github.com/CAPDEV-ORG/DevOps-ProjectFoyer.git'
