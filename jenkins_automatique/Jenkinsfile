@@ -15,18 +15,7 @@ pipeline {
 
         stage('Git') {
             steps {
-                script {
-                    checkout([
-                        $class: 'GitSCM',
-                        branches: [[name: 'idriss_ben_younes']],
-                        userRemoteConfigs: [[
-                            url: 'https://github.com/CAPDEV-ORG/DevOps-ProjectFoyer.git',
-                            // Add the credentialsId if required
-                            credentialsId: 'GIT_CREDENTIALS_ID'
-                        ]]
-                    ])
-                }
-            }
+             git branch: 'idriss_ben-younes', url: 'https://github.com/CAPDEV-ORG/DevOps-ProjectFoyer.git'            }
         }
 
         stage('Testing Maven') {
@@ -49,11 +38,11 @@ pipeline {
                 }
             }
         }
-
         stage('SonarQube Analysis') {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+                        echo "SONAR_TOKEN: $SONAR_TOKEN"
                         sh """
                             mvn clean verify sonar:sonar \
                             -Dsonar.projectKey=CapDev \
@@ -65,14 +54,13 @@ pipeline {
                 }
             }
         }
-
-        stage('Deploy nexus') {
+         stage('Deploy nexus') {
             steps {
                 script {
                     sh 'mvn deploy -DskipTests'
                 }
             }
-        }
+         }
     }
 
     post {
@@ -88,7 +76,7 @@ pipeline {
                     <p>Duration: <strong>${currentBuild.durationString}</strong></p>
                 """,
                 to: 'idriss.benyounes@esprit.tn',
-                mimeType: 'text/html'
+                mimeType: 'text/html' // Use HTML for better formatting
             )
         }
         failure {
@@ -100,7 +88,7 @@ pipeline {
                     <p>Check the logs here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
                     <p>Commit: <strong>${env.GIT_COMMIT}</strong></p>
                     <p>Branch: <strong>${env.GIT_BRANCH}</strong></p>
-                    <p>Triggered by: <strong>${currentBuild.causeDescription ?: 'N/A'}</strong></p>
+                    <p>Triggered by: <strong>${currentBuild.getCause(hudson.model.Cause$PushCause)?.shortDescription ?: 'N/A'}</strong></p>
                 """,
                 to: 'idriss.benyounes@esprit.tn',
                 mimeType: 'text/html'
