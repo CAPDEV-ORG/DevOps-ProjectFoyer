@@ -15,7 +15,7 @@ pipeline {
 
         stage('Git') {
             steps {
-             git branch: 'idriss_ben-younes', url: 'https://github.com/CAPDEV-ORG/DevOps-ProjectFoyer.git'            }
+             git branch: 'idriss_ben_younes', url: 'https://github.com/CAPDEV-ORG/DevOps-ProjectFoyer.git'            }
         }
 
         stage('Testing Maven') {
