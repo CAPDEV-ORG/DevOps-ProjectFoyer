@@ -4,6 +4,7 @@ pipeline {
     tools {
         jdk 'JAVA_HOME'
         maven 'M2_HOME'
+
     }
 
     stages {
@@ -15,7 +16,7 @@ pipeline {
 
         stage('Git') {
             steps {
-                git branch: 'refs/heads/idriss_ben_younes', url: 'https://github.com/CAPDEV-ORG/DevOps-ProjectFoyer.git'
+                git branch: 'idriss_ben_younes', url: 'https://github.com/CAPDEV-ORG/DevOps-ProjectFoyer.git/'
             }
         }
 
