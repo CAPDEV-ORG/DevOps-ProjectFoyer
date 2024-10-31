@@ -49,12 +49,9 @@ pipeline {
 
         }
         stage ('Nexus') {
-
             steps {
-
-                sh 'mvn deploy -Dmaven.test.skip=true'
+                sh 'mvn deploy -Dmaven.test.skip=true -DaltDeploymentRepository=deploymentRep::default::http://192.168.50.4:8081/repository/deploymentRep/'
             }
-
         }
     }
 
