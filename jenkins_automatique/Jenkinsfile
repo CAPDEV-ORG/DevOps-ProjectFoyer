@@ -1,0 +1,130 @@
+pipeline {
+    agent any
+
+    tools {
+        jdk 'JAVA_HOME'
+        maven 'M2_HOME'
+
+    }
+
+    stages {
+        stage('Hello') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+
+        stage('Git') {
+            steps {
+                git branch: 'idriss_ben_younes', url: 'https://github.com/CAPDEV-ORG/DevOps-ProjectFoyer.git/'
+            }
+        }
+
+
+
+
+        stage('Testing Maven') {
+            steps {
+                sh 'mvn -version'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean install'
+            }
+        }
+
+        stage('Display Date') {
+            steps {
+                script {
+                    def currentDate = new Date()
+                    echo "Current Date: ${currentDate}"
+                }
+            }
+        }
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+                        echo "SONAR_TOKEN: $SONAR_TOKEN"
+                        sh """
+                            mvn clean verify sonar:sonar \
+                            -Dsonar.projectKey=CapDev \
+                            -Dsonar.projectName=CapDev \
+                            -Dsonar.host.url=http://192.168.50.4:9000 \
+                            -Dsonar.token=\$SONAR_TOKEN
+                        """
+                    }
+                }
+            }
+        }
+         stage('Deploy nexus') {
+            steps {
+                script {
+                    sh 'mvn deploy -DskipTests'
+                }
+            }
+         }
+                 stage('Créer l’Image Docker') {
+                     steps {
+                         script {
+                             sh "docker build -t idross/tp-foyer:latest ."
+                         }
+                     }
+                 }
+
+                 stage('Pousser l’Image Docker sur Docker Hub') {
+                     steps {
+                         script {
+                             docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
+                                 def app = docker.build("idross/tp-foyer:latest")
+                                 app.push("latest")
+                             }
+                         }
+                     }
+                 }
+
+                 stage('Déployer avec Docker Compose') {
+                     steps {
+                         script {
+                             sh 'docker-compose down || true' // Arrêter les conteneurs existants
+                             sh 'docker-compose up -d' // Démarrer les nouveaux conteneurs en arrière-plan
+                         }
+                     }
+                 }
+    }
+
+    post {
+        success {
+            emailext(
+                subject: "SUCCESS: Build #${currentBuild.number} - ${currentBuild.fullDisplayName}",
+                body: """
+                    <h2>Build Successful!</h2>
+                    <p>The build was successful!</p>
+                    <p>Check it out here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                    <p>Commit: <strong>${env.GIT_COMMIT}</strong></p>
+                    <p>Branch: <strong>${env.GIT_BRANCH}</strong></p>
+                    <p>Duration: <strong>${currentBuild.durationString}</strong></p>
+                """,
+                to: 'idriss.benyounes@esprit.tn',
+                mimeType: 'text/html' // Use HTML for better formatting
+            )
+        }
+        failure {
+            emailext(
+                subject: "FAILED: Build #${currentBuild.number} - ${currentBuild.fullDisplayName}",
+                body: """
+                    <h2>Build Failed!</h2>
+                    <p>The build has failed.</p>
+                    <p>Check the logs here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                    <p>Commit: <strong>${env.GIT_COMMIT}</strong></p>
+                    <p>Branch: <strong>${env.GIT_BRANCH}</strong></p>
+                    <p>Triggered by: <strong>${currentBuild.getCause(hudson.model.Cause$PushCause)?.shortDescription ?: 'N/A'}</strong></p>
+                """,
+                to: 'idriss.benyounes@esprit.tn',
+                mimeType: 'text/html'
+            )
+        }
+    }
+}
