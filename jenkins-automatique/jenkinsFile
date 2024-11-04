@@ -53,6 +53,12 @@ pipeline {
                 sh 'mvn deploy -DskipTests'
                   }
         }
+        stage ('dockercompose') {
+                    steps {
+                        sh 'docker compose down '
+                        sh 'docker compose up -d'
+                          }
+                }
     }
 
     post {
