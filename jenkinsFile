@@ -42,12 +42,12 @@ pipeline {
         }
 
          stage('Deploy Nexus') {
-            steps {
-                script {
-                    sh 'mvn deploy -DskipTests'
-                }
-            }
-        }
+             steps {
+                 script {
+                     sh 'mvn deploy -DskipTests'
+                 }
+             }
+         }
     }
 
     post {
