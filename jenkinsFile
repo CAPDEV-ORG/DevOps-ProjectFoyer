@@ -17,7 +17,7 @@ pipeline {
             }
         }
 
-        stage('Build and Analyze') {
+        stage('SonarQube Analysis') {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'capdev', variable: 'capdev')]) {
