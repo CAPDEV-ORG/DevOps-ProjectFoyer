@@ -17,11 +17,6 @@
         <java.version>17</java.version>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -76,5 +71,14 @@
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>deploymentRepo</id>
+            <name>Nexus Releases Repository</name>
+            <url>http://192.168.50.4:8082/repository/maven-releases/</url>
+            <layout>default</layout>
+        </repository>
+    </distributionManagement>
 
 </project>
