@@ -74,19 +74,19 @@ pipeline {
                      }
                  }
 
-                        stage('Push Docker Image') {
-                            steps {
-                                script {
-                                    withCredentials([string(credentialsId: 'DOCKER_TOKEN', variable: 'DOCKER_TOKEN')]) {
-                                        sh '''
-                                            echo "${DOCKER_TOKEN}" | docker login -u idross --password-stdin
-                                            docker push idross/tp-foyer:5.0.0
-                                            docker logout
-                                        '''
-                                    }
-                                }
+                stage('Push Docker Image') {
+                    steps {
+                        script {
+                            withCredentials([string(credentialsId: 'DOCKER-TOKEN', variable: 'DOCKER-TOKEN')]) {
+                                sh '''
+                                    echo "${DOCKER-TOKEN}" | docker login -u idross --password-stdin
+                                    docker push idross/tp-foyer:5.0.0
+                                    docker logout
+                                '''
                             }
                         }
+                    }
+                }
 
 
                  stage('Déployer avec Docker Compose') {
