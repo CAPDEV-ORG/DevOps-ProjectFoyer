@@ -92,8 +92,8 @@ pipeline {
                  stage('Déployer avec Docker Compose') {
                      steps {
                          script {
-                             sh 'sudo docker-compose down || true' // Arrêter les conteneurs existants
-                             sh 'sudo docker-compose up -d' // Démarrer les nouveaux conteneurs en arrière-plan
+                             sh 'sudo docker-compose down --remove-orphans' // Arrêter les conteneurs existants
+                             sh 'sudo docker-compose up -d --remove-orphans' // Démarrer les nouveaux conteneurs en arrière-plan
                          }
                      }
                  }
