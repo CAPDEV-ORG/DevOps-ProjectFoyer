@@ -74,13 +74,19 @@ pipeline {
                      }
                  }
 
-                 stage('Pousser l’Image Docker sur Docker Hub') {
-                     steps {
-                         script {
-                             sh "docker push idross/tp-foyer:5.0.0"
-                             }
-                         }
-                     }
+                        stage('Push Docker Image') {
+                            steps {
+                                script {
+                                    withCredentials([string(credentialsId: 'DOCKER_TOKEN', variable: 'DOCKER_TOKEN')]) {
+                                        sh '''
+                                            echo "${DOCKER_TOKEN}" | docker login -u idross --password-stdin
+                                            docker push idross/tp-foyer:5.0.0
+                                            docker logout
+                                        '''
+                                    }
+                                }
+                            }
+                        }
 
 
                  stage('Déployer avec Docker Compose') {
