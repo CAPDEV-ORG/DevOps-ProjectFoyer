@@ -95,14 +95,5 @@ pipeline {
                 mimeType: 'text/html' // Use HTML for better formatting
             )
         }
-        }
-
-    post {
-        success {
-            echo "SonarQube analysis completed successfully."
-        }
-        failure {
-            echo "SonarQube analysis failed."
-        }
     }
 }
