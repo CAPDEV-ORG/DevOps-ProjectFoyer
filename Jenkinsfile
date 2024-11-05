@@ -69,7 +69,7 @@ pipeline {
                  stage('Créer l’Image Docker') {
                      steps {
                          script {
-                             sh "docker build -t idross/tp-foyer:latest ."
+                             sh "docker build -t idross/tp-foyer:5.0.0 ."
                          }
                      }
                  }
@@ -78,8 +78,8 @@ pipeline {
                      steps {
                          script {
                              docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
-                                 def app = docker.build("idross/tp-foyer:latest")
-                                 app.push("latest")
+                                 def app = docker.build("idross/tp-foyer:5.0.0")
+                                 app.push("5.0.0")
                              }
                          }
                      }
