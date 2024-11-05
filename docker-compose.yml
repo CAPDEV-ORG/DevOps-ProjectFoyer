@@ -1,38 +1,44 @@
-version: "3.8"
-
 services:
-  mysqldb:
-    image: mysql:8
-    restart: unless-stopped
-    ports:
-      - "3306:3306"
+  app-tp-foyer:
+    build: .
+    container_name: app-tp-foyer
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: db
-    volumes:
-      - db_data:/var/lib/mysql
-
-  tpfoyer-backend:
-    depends_on:
-      - mysqldb
-    build:
-      context: .
-      dockerfile: Dockerfile
-    restart: on-failure
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/tp-foyer?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQLDialect
     ports:
       - "8089:8089"
+    image: idross/tp-foyer:5.0.0
+    restart: unless-stopped
+    depends_on:
+      - mysqldb
+    networks:
+      - spring-mysql
+
+  mysqldb:
+    image: mysql:5.7
+    container_name: mysqldb
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/db?createDatabaseIfNotExist=true
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD:
-      SPRING_JPA_SHOW_SQL: "true"
-      SPRING_JPA_HIBERNATE_DDL_AUTO: "update"
-      SERVER_PORT: 8089
-      SERVER_SERVLET_CONTEXT_PATH: /tpfoyer
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_DATABASE=tp-foyer
+    ports:
+      - "3306:3306"
     volumes:
-      - .m2:/root/.m2
-    stdin_open: true
-    tty: true
+      - db:/var/lib/mysql
+    networks:
+      - spring-mysql
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  spring-mysql:
+    driver: bridge
 
 volumes:
-  db_data:
+  db:
