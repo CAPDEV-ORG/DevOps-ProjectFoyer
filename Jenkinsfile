@@ -81,7 +81,7 @@ pipeline {
                              }
                          }
                      }
-                 }
+
 
                  stage('Déployer avec Docker Compose') {
                      steps {
