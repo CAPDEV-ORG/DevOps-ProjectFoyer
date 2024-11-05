@@ -1,10 +1,4 @@
-FROM maven:3.8.6-openjdk-17 AS build
-WORKDIR /app
-COPY pom.xml .
-COPY src src
-RUN mvn clean package -DskipTests
-FROM openjdk:17-jdk-slim
-WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
+FROM openjdk:17-jdk
 EXPOSE 8089
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ADD target/tp-foyer-1.0.0.jar tp-foyer.jar
+ENTRYPOINT ["java", "-jar", "/tp-foyer.jar"]
