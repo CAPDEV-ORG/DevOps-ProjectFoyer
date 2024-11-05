@@ -41,22 +41,23 @@ pipeline {
             }
         }
 
-         stage('Deploy Nexus') {
-             steps {
-                 script {
-                     sh 'mvn deploy -DskipTests'
-                 }
-             }
-         }
+        stage('Deploy Nexus') {
+            steps {
+                script {
+                    sh 'mvn deploy -DskipTests'
+                }
+            }
+        }
+
+        stage('Docker Compose') {
+            steps {
+                script {
+                    // Assurez-vous que le fichier docker-compose.yml est dans le répertoire courant
+                    sh 'docker compose up -d'
+                }
+            }
+        }
     }
-          stage('Docker Compose') {
-              steps {
-                  script {
-                      // Assurez-vous que le fichier docker-compose.yml est dans le répertoire courant
-                      sh 'docker compose up -d'
-                  }
-              }
-          }
 
     post {
         success {
