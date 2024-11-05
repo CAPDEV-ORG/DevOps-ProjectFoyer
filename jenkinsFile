@@ -19,7 +19,7 @@ pipeline {
             }
         }
 
-        stage('Testing mvn') {
+        /*stage('Testing mvn') {
             steps {
                 sh 'mvn --version'
             }
@@ -69,7 +69,7 @@ pipeline {
                     sh 'mvn deploy -DskipTests'
                 }
             }
-         }
+         }*/
     }
 
     post {
