@@ -77,9 +77,7 @@ pipeline {
                  stage('Pousser l’Image Docker sur Docker Hub') {
                      steps {
                          script {
-                             docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
-                                 def app = docker.build("idross/tp-foyer:5.0.0")
-                                 app.push("5.0.0")
+                             sh "docker push idross/tp-foyer:5.0.0"
                              }
                          }
                      }
