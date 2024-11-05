@@ -41,10 +41,11 @@ pipeline {
             }
         }
 
-        stage('Deploy to Nexus') {
+         stage('Deploy Nexus') {
             steps {
-                // Déployer le projet dans Nexus
-                sh 'mvn deploy -DskipTests'
+                script {
+                    sh 'mvn deploy -DskipTests'
+                }
             }
         }
     }
