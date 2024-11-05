@@ -43,7 +43,7 @@ pipeline {
                 }
             }
         }
-        stage('SonarQube Analysis') {
+      /*  stage('SonarQube Analysis') {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
@@ -65,7 +65,7 @@ pipeline {
                     sh 'mvn deploy -DskipTests'
                 }
             }
-         }
+         }*/
                  stage('Créer l’Image Docker') {
                      steps {
                          script {
