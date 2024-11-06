@@ -9,7 +9,7 @@ pipeline {
      environment {
             GRAFANA_API_KEY = credentials('Grafana')
             GRAFANA_URL = 'http://192.168.50.4:3000'
-            DASHBOARD_IDS = 'haryan-jenkins,spring,MQWgroiiz' // Comma-separated list of dashboard IDs
+            DASHBOARD_IDS = 'haryan-jenkins,spring,test' // Comma-separated list of dashboard IDs
      }
 
     stages {
