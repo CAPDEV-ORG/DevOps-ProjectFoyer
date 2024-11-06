@@ -102,6 +102,13 @@ pipeline {
                          }
                      }
                  }
+                 stage('Clean Up') {
+                     steps {
+                         sh '''
+                             docker container prune -f
+                         '''
+                     }
+                 }
 
 
                         stage('Monitoring Grafana') {
