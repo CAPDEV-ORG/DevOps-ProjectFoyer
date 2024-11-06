@@ -63,20 +63,20 @@ pipeline {
                  }
              }
           }
-    }
 
-    stage('Docker Compose') {
-                  steps {
-                      script {
-                          // Assurez-vous que le fichier docker-compose.yml est dans le répertoire courant
-                          sh 'docker compose up -d'
-                      }
+
+        stage('Docker Compose') {
+              steps {
+                  script {
+                      // Assurez-vous que le fichier docker-compose.yml est dans le répertoire courant
+                      sh 'docker compose up -d'
                   }
               }
+        }
 
 
 */
-
+    }
     post {
         success {
             emailext(
