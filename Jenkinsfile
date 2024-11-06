@@ -6,6 +6,11 @@ pipeline {
         maven 'M2_HOME'
 
     }
+     environment {
+            GRAFANA_API_KEY = credentials('Grafana')
+            GRAFANA_URL = 'http://192.168.50.4:3000'
+            DASHBOARD_IDS = 'haryan-jenkins,spring,MQWgroiiz' // Comma-separated list of dashboard IDs
+     }
 
     stages {
         stage('Hello') {
@@ -97,6 +102,24 @@ pipeline {
                          }
                      }
                  }
+
+
+                  stage('Fetch Grafana Dashboards') {
+                             steps {
+                                 script {
+                                     def dashboardIds = DASHBOARD_IDS.split(',')
+
+                                     for (dashboardId in dashboardIds) {
+                                         def response = sh(script: """
+                                             curl -s -H "Authorization: Bearer ${GRAFANA_API_KEY}" \
+                                             ${GRAFANA_URL}/api/dashboards/id/${dashboardId.trim()}
+                                         """, returnStdout: true).trim()
+
+                                         echo "Fetched Grafana Dashboard ${dashboardId}: ${response}"
+                                     }
+                                 }
+                             }
+                         }
     }
 
     post {
