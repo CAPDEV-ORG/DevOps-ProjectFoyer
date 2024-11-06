@@ -104,17 +104,19 @@ pipeline {
                  }
 
 
-                  stage('Monitoring  Grafana') {
+                 stage('Monitoring Grafana') {
                              steps {
                                  script {
                                      def dashboardIds = DASHBOARD_IDS.split(',')
 
                                      for (dashboardId in dashboardIds) {
-                                         def response = sh(script: """
+                                         // Construct the command without Groovy interpolation for the API key
+                                         def command = """
                                              curl -s -H "Authorization: Bearer ${GRAFANA_API_KEY}" \
-                                             ${GRAFANA_URL}/api/dashboards/id/${dashboardId.trim()}
-                                         """, returnStdout: true).trim()
-
+                                             ${GRAFANA_URL}/api/dashboards/uid/${dashboardId.trim()}
+                                         """
+                                         // Execute the command
+                                         def response = sh(script: command, returnStdout: true).trim()
                                          echo "Fetched Grafana Dashboard ${dashboardId}: ${response}"
                                      }
                                  }
