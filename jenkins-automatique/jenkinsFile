@@ -59,13 +59,7 @@ pipeline {
                         sh 'docker compose up -d'
                           }
                 }
-                stage ('Grafana and Prometheus') {
-                    steps {
-                        echo 'Deploying Grafana and Prometheus...'
-                        sh 'docker-compose down' 
-                        sh 'docker-compose up -d prometheus grafana'
-                    }
-                }
+                
     }
 
     post {
