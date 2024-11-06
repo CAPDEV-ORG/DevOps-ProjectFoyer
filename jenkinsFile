@@ -65,17 +65,31 @@ pipeline {
           }
 
 
-        stage('Docker Compose') {
+*/
+
+
+        stage('build Docker image  ') {
               steps {
                   script {
-                      // Assurez-vous que le fichier docker-compose.yml est dans le répertoire courant
-                      sh 'docker compose up -d'
+                      sh 'docker build -t yassinekalboussi/tp-foyer:5.0.0 .'
                   }
               }
         }
+       stage('Push Docker image') {
+               steps {
+                   script {
+                       withCredentials([string(credentialsId: 'docker-hub-token', variable: 'DOCKER_TOKEN')]) {
+                           sh '''
+                               echo "${DOCKER_TOKEN}" | docker login -u yassinekalboussi --password-stdin
+                               docker push yassinekalboussi/tp-foyer:5.0.0
+                               docker logout
+                           '''
+                       }
+                   }
+               }
+       }
 
 
-*/
     }
     post {
         success {
