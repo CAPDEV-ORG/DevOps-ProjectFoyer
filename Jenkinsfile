@@ -128,6 +128,8 @@ pipeline {
                   stage('Docker Image Scan') {
                               steps {
                                sh "trivy image --severity CRITICAL --format table -o trivy-image-report.html idross/tp-foyer:5.0.0"
+
+
                               }
                           }
     }
