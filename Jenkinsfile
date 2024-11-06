@@ -92,13 +92,7 @@ pipeline {
                         }
                     }
                 }
-               stage('Clean Up Docker') {
-                     steps {
-                         sh '''
-                             docker container prune -f
-                         '''
-                     }
-                 }
+
 
 
 
