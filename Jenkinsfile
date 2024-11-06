@@ -92,7 +92,13 @@ pipeline {
                         }
                     }
                 }
-
+               stage('Clean Up Docker') {
+                     steps {
+                         sh '''
+                             docker container prune -f
+                         '''
+                     }
+                 }
 
                  stage('Déployer avec Docker Compose') {
                      steps {
@@ -102,13 +108,7 @@ pipeline {
                          }
                      }
                  }
-                 stage('Clean Up') {
-                     steps {
-                         sh '''
-                             docker container prune -f
-                         '''
-                     }
-                 }
+
 
 
                         stage('Monitoring Grafana') {
