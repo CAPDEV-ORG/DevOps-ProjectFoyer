@@ -104,24 +104,24 @@ pipeline {
                  }
 
 
-                 stage('Monitoring Grafana') {
-                             steps {
-                                 script {
-                                     def dashboardIds = DASHBOARD_IDS.split(',')
+                   stage('Monitoring Grafana') {
+                            steps {
+                                script {
+                                    def dashboardIds = DASHBOARD_IDS.split(',')
 
-                                     for (dashboardId in dashboardIds) {
-                                         // Construct the command without Groovy interpolation for the API key
-                                         def command = """
-                                             curl -s -H "Authorization: Bearer ${GRAFANA_API_KEY}" \
-                                             ${GRAFANA_URL}/api/dashboards/uid/${dashboardId.trim()}
-                                         """
-                                         // Execute the command
-                                         def response = sh(script: command, returnStdout: true).trim()
-                                         echo "Fetched Grafana Dashboard ${dashboardId}: ${response}"
-                                     }
-                                 }
-                             }
-                         }
+                                    for (dashboardId in dashboardIds) {
+                                        // Construct the command
+                                        def command = """
+                                            curl -s -H "Authorization: Bearer ${env.GRAFANA_API_KEY}" \
+                                            ${GRAFANA_URL}/api/dashboards/uid/${dashboardId.trim()}
+                                        """
+                                        // Execute the command
+                                        def response = sh(script: command, returnStdout: true).trim()
+                                        echo "Fetched Grafana Dashboard ${dashboardId}: ${response}"
+                                    }
+                                }
+                            }
+                        }
     }
 
     post {
