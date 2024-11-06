@@ -40,15 +40,16 @@ services:
 
   mysqld_exporter:
     image: prom/mysqld-exporter
-    environment:
-      - DATA_SOURCE_NAME="root:@tcp(mysqldb:3306)/"
+    command:
+      - --config.my-cnf=/cfg/.my.cnf
+      - --mysqld.address=192.168.50.4:3306
+    volumes:
+      - ./my.cnf:/cfg/.my.cnf
+    ports:
+      - "9104:9104"
     networks:
       - spring-mysql
     restart: unless-stopped
-    ports:
-      - "9104:9104"
-    depends_on:
-      - mysqldb
 
 
 
