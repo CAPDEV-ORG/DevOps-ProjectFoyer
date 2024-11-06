@@ -104,7 +104,7 @@ pipeline {
                  }
 
 
-                  stage('Fetch Grafana Dashboards') {
+                  stage('Monitoring  Grafana') {
                              steps {
                                  script {
                                      def dashboardIds = DASHBOARD_IDS.split(',')
