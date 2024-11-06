@@ -110,16 +110,22 @@ pipeline {
                                      def dashboardIds = DASHBOARD_IDS.split(',')
 
                                      for (dashboardId in dashboardIds) {
-                                         // Prepare the curl command without using string interpolation directly with GRAFANA_API_KEY
                                          def command = "curl -s -H \"Authorization: Bearer ${env.GRAFANA_API_KEY}\" ${GRAFANA_URL}/api/dashboards/uid/${dashboardId.trim()}"
 
-                                         // Execute the command securely
                                          def response = sh(script: command, returnStdout: true).trim()
                                          echo "Fetched Grafana Dashboard ${dashboardId}: ${response}"
                                      }
                                  }
                              }
                          }
+                          stage('Trivy Scan') {
+                                     steps {
+                                         script {
+                                             // Run Trivy scan for the built image
+                                             sh 'docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd)/trivy-cache:/root/.cache/ aquasec/trivy image idross/tp-foyer:5.0.0'
+                                         }
+                                     }
+                                 }
     }
 
     post {
