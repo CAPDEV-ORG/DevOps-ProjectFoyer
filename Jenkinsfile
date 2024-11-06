@@ -118,13 +118,11 @@ pipeline {
                                  }
                              }
                          }
-                   stage('Trivy Scan') {
-                               steps {
-                                   script {
-                                       sh 'docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd)/trivy-cache:/root/.cache/ aquasec/trivy image idross/tp-foyer:5.0.0'
-                                   }
-                               }
-                           }
+                  stage('Docker Image Scan') {
+                              steps {
+                               sh "trivy image --scanners vuln --format table -o trivy-image-report.html idross/tp-foyer:5.0.0"
+                              }
+                          }
     }
 
     post {
