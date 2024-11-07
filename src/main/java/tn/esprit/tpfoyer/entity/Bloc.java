@@ -33,5 +33,14 @@ public class Bloc {
     @ToString.Exclude
     Set<Chambre> chambres = new HashSet<Chambre>();
 
+    // Add constructor for initialization
+    public Bloc(long idBloc, String nomBloc, long capaciteBloc) {
+        this.idBloc = idBloc;
+        this.nomBloc = nomBloc;
+        this.capaciteBloc = capaciteBloc;
+    }
+
+    public Bloc(long l, String blocA) {
+    }
 }
 

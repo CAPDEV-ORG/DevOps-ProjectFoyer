@@ -27,6 +27,8 @@ public class FoyerRestController {
         return foyer;
     }
 
+
+
     // http://localhost:8089/tpfoyer/foyer/add-foyer
     @PostMapping("/add-foyer")
     public Foyer addFoyer(@RequestBody Foyer f) {

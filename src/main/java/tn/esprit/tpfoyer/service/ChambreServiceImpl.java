@@ -9,6 +9,7 @@ import tn.esprit.tpfoyer.entity.TypeChambre;
 import tn.esprit.tpfoyer.repository.ChambreRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -29,6 +30,12 @@ public class ChambreServiceImpl implements IChambreService {
         Chambre c = chambreRepository.findById(chambreId).get();
         return c;
     }
+
+    public Chambre retrieveChambre(long id) {
+        Optional<Chambre> chambreOpt = chambreRepository.findById(id);
+        return chambreOpt.orElse(null); // Returns null if not found, or you can throw an exception if desired
+    }
+
 
     public Chambre addChambre(Chambre c) {
         Chambre chambre = chambreRepository.save(c);
