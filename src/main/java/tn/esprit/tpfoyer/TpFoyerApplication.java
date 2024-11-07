@@ -16,5 +16,4 @@ public class TpFoyerApplication {
     public static void main(String[] args) {
         SpringApplication.run(TpFoyerApplication.class, args);
     }
-
 }

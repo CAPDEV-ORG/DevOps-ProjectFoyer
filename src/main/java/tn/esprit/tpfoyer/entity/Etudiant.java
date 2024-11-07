@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
 
@@ -11,7 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @AllArgsConstructor
-
+@Builder
 
 @NoArgsConstructor
 @ToString
@@ -25,7 +26,7 @@ public class Etudiant {
     String nomEtudiant;
     String prenomEtudiant;
     long cinEtudiant;
-    Date dateNaissance;
+    LocalDate dateNaissance;
 
     @ManyToMany(mappedBy = "etudiants")
     Set<Reservation> reservations;

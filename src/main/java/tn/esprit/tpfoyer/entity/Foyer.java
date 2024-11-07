@@ -13,6 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Foyer {
 

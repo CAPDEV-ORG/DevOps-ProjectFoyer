@@ -59,7 +59,13 @@ pipeline {
                         sh 'docker compose up -d'
                           }
                 }
-                
+
+        stage('CI - Testing Maven') {
+                    steps {
+                        echo 'Running Maven tests...'
+                        sh 'mvn test'
+                    }
+                }
     }
 
     post {
