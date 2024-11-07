@@ -121,7 +121,7 @@ pipeline {
                          }
                   stage('Docker Image Scan') {
                               steps {
-                               sh "trivy image --skip-db-update --severity CRITICAL --scanners vuln --format table -o trivy-image-report.html idross/tp-foyer:5.0.0"
+                               sh "trivy image --skip-db-update --scanners vuln --format table -o trivy-image-report.html idross/tp-foyer:5.0.0"
 
 
                               }
