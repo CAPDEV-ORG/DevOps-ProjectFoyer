@@ -1,25 +1,24 @@
 pipeline {
     agent any
-
+    environment {
+        GRAFANA_API_KEY = credentials('grafana-api-key')
+        GRAFANA_URL = 'http://192.168.50.4:3000'
+        PROMETHEUS_URL = 'http://192.168.50.4:9090'
+    }
     tools {
         jdk 'JAVA_HOME'
         maven 'M2_HOME'
     }
 
     stages {
-        stage('Hello') {
-            steps {
-                echo 'Hello World'
-            }
-        }
 
-        stage('Git') {
+        stage('Git Checkout') {
             steps {
                 git branch: 'Sayed-Ben-Slimene', url: 'https://github.com/CAPDEV-ORG/DevOps-ProjectFoyer.git'
             }
         }
 
-        /*stage('Testing mvn') {
+        stage('Testing mvn') {
             steps {
                 sh 'mvn --version'
             }
@@ -27,22 +26,13 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'mvn clean install'
+                sh 'mvn clean package -DskipTests'
             }
         }
 
-        stage('Test') {
+        stage('Run Unit Test') {
             steps {
                 sh 'mvn test'
-            }
-        }
-
-        stage('Display Date') {
-            steps {
-                script {
-                    def currentDate = new Date()
-                    echo "Current Date: ${currentDate}"
-                }
             }
         }
 
@@ -63,13 +53,46 @@ pipeline {
             }
         }
 
-         stage('Deploy Nexus') {
+        stage('Deploy Nexus') {
             steps {
                 script {
                     sh 'mvn deploy -DskipTests'
                 }
             }
-         }*/
+         }
+         stage('Build Docker Image') {
+            steps {
+                script {
+                    sh 'docker build -t sayedbenslimene/tp-foyer:5.0.0 .'
+                }
+            }
+        }
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'docker-hub-token', variable: 'DOCKER_TOKEN')]) {
+                        sh '''
+                            echo "${DOCKER_TOKEN}" | docker login -u sayedbenslimene --password-stdin
+                            docker push sayedbenslimene/tp-foyer:5.0.0
+                            docker logout
+                        '''
+                    }
+                }
+            }
+        }
+        stage('Deploy with Docker Compose') {
+            steps {
+                script {
+                    echo "Starting Docker containers using Docker Compose..."
+                    sh 'docker compose up -d'
+                }
+            }
+        }
+        stage('Use Existing Grafana Dashboard') {
+            steps {
+                echo "Grafana dashboard for monitoring available at: ${GRAFANA_URL}/d/haryan-jenkins/jenkins3a-performance-and-health-overview"
+            }
+        }
     }
 
     post {
