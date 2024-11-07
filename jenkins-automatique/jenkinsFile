@@ -1,6 +1,10 @@
 pipeline {
     agent any
-
+    environment {
+            GRAFANA_API_KEY = credentials('grafana-api-key')
+            GRAFANA_URL = 'http://192.168.50.4:3000'
+            PROMETHEUS_URL = 'http://localhost:9090'
+        }
     tools {
         jdk 'JAVA_HOME'
         maven 'M2_HOME'
@@ -67,6 +71,11 @@ pipeline {
                     }
                 }
     }
+    stage('Use Existing Grafana Dashboard') {
+            steps {
+            echo "Grafana dashboard for monitoring available at: ${GRAFANA_URL}/d/haryan-jenkins/jenkins3a-performance-and-health-overview"
+                 }
+            }
 
     post {
         success {
