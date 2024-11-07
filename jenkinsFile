@@ -9,7 +9,7 @@ pipeline {
         jdk 'JAVA_HOME'  // Actual JDK tool name in Jenkins
         maven 'M2_HOME'  // Actual Maven tool name in Jenkins
     }
-
+     //com
     stages {
 
         stage('Git') {
