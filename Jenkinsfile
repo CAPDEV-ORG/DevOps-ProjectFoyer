@@ -115,6 +115,7 @@ pipeline {
 
                                          def response = sh(script: command, returnStdout: true).trim()
                                          echo "Fetched Grafana Dashboard ${dashboardId}: ${response}"
+
                                      }
                                  }
                              }
