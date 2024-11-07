@@ -1,6 +1,5 @@
 package tn.esprit.tpfoyer;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -16,7 +15,6 @@ import tn.esprit.tpfoyer.repository.FoyerRepository;
 import tn.esprit.tpfoyer.repository.UniversiteRepository;
 import tn.esprit.tpfoyer.service.EtudiantServiceImpl;
 import tn.esprit.tpfoyer.service.FoyerServiceImpl;
-import tn.esprit.tpfoyer.service.IFoyerService;
 
 import java.time.LocalDate;
 
@@ -24,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @TestMethodOrder(MethodOrderer. OrderAnnotation.class)
 @SpringBootTest
-public class FoyerServiceImplTest {
+ class FoyerServiceImplTest {
 
     @Autowired
     private FoyerRepository foyerRepository;
@@ -41,12 +39,9 @@ public class FoyerServiceImplTest {
     @Autowired
     private EtudiantServiceImpl etudiantserviceimpl;
 
-    /*@BeforeEach
-    public void setUp() {
-        FoyerServiceImpl = new foyerserviceimpl(foyerRepository, universiteRepository, blocRepository);
-    }*/
+
     @Test
-    public void testaddFoyer(){
+     void testaddFoyer(){
         // Arrange
         Foyer foyer = Foyer.builder()
                 .nomFoyer("Foyer Test Junit")
@@ -63,7 +58,7 @@ public class FoyerServiceImplTest {
     }
 
     @Test
-    public void testAddEtudiant() {
+     void testAddEtudiant() {
         // Arrange
         Etudiant etudiant = Etudiant.builder()
                 .nomEtudiant("etudiant Test Junit")

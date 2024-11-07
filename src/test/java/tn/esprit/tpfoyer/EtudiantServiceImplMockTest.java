@@ -15,23 +15,15 @@ import tn.esprit.tpfoyer.service.EtudiantServiceImpl;
 import java.time.LocalDate;
 
 @ExtendWith(MockitoExtension.class)
-public class EtudiantServiceImplMockTest {
+     class EtudiantServiceImplMockTest {
     @Mock
     EtudiantRepository etudiantRepository;
     @InjectMocks
     EtudiantServiceImpl etudiantServiceimpl;
 
     @Test
-    public void testModifyEtudiant() {
+     void testModifyEtudiant() {
         // Arrange
-        Etudiant existingEtudiant = Etudiant.builder()
-                .idEtudiant(1L)
-                .nomEtudiant("Ancien Nom")
-                .prenomEtudiant("Ancien Prenom")
-                .cinEtudiant(14500925)
-                .dateNaissance(LocalDate.of(2002, 2, 14))
-                .build();
-
         Etudiant modifiedEtudiant = Etudiant.builder()
                 .idEtudiant(1L)
                 .nomEtudiant("Nouveau Nom")
